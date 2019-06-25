@@ -5,3 +5,4 @@ import orders from "./orders";
 import comments from "./comments";
 
 const rootReducer = combineReducers(products, shops, orders, comments);
+export default rootReducer;
