@@ -13,9 +13,9 @@ export const actions = {
   })
 };
 
-const reducer = (state = { initialState }, action) => {
+const reducer = (state = initialState, action) => {
   const { type, error } = action;
-  if (type == types.CLEAR_ERROR) {
+  if (type === types.CLEAR_ERROR) {
     return { ...state, error: null };
   } else if (error) {
     return { ...state, error: error };

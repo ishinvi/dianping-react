@@ -17,17 +17,16 @@ export const actions = {
   }
 };
 
-const fetchLikes = (endpoint, params) => ({
+const fetchLikes = (endpoint) => ({
   [FETCH_DATA]: {
     types: [
-      type.FETCH_LIKES_REQUEST,
-      type.FETCH_LIKES_SUCCESS,
-      type.FETCH_LIKES_FAILURE
+      types.FETCH_LIKES_REQUEST,
+      types.FETCH_LIKES_SUCCESS,
+      types.FETCH_LIKES_FAILURE
     ],
     endpoint,
     schema
-  },
-  params
+  }
 });
 
 const reducer = (state = {}, action) => {

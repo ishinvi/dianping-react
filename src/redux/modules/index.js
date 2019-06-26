@@ -6,5 +6,5 @@ import app from "./app";
 
 //合并成根reducer
 
-const rootReducer = combineReducers(entities, home, detail, app);
+const rootReducer = combineReducers({entities, home, detail, app});//mmp 不加花括号会报Cannot read property 'error' of undefined
 export default rootReducer;
