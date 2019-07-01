@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Slider from "react-slick";
-import './style.css'
+import "./style.css";
 const dataSource = [
   {
     pic:
@@ -47,7 +47,11 @@ class HeadLine extends Component {
                 >
                   <div className="headline__sliderTitle">{item.title}</div>
                   <div className="headline__sliderImgWrapper">
-                    <img className="headline__sliderImg" src={item.pic} />
+                    <img
+                      alt=""
+                      className="headline__sliderImg"
+                      src={item.pic}
+                    />
                   </div>
                 </a>
               );

@@ -23,15 +23,22 @@ class LikeList extends Component {
         {pageCount < 3 ? (
           <Loading />
         ) : (
-          <a className="likeList__viewAll">查看更多</a>
+          <a href='#' className="likeList__viewAll">查看更多</a>
         )}
       </div>
     );
   }
 
   componentDidMount() {
-    document.addEventListener("scroll", this.handleScroll);
-    this.props.fetchData();
+    if(this.props.pageCount<3){
+      document.addEventListener("scroll", this.handleScroll);
+    }
+    else{
+      this.removeListener=true;
+    }
+    if(this.props.pageCount===0){
+      this.props.fetchData();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
