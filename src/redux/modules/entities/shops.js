@@ -1,6 +1,6 @@
 import createReducer from "../../../utils/createReducer";
 
-const schema = {
+export const schema = {
   name: "shops",
   id: "id"
 };

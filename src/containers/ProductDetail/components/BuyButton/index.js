@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
-import './style.css'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import "./style.css";
 class BuyButton extends Component {
-    render() {
-        return (
-            <a className='buyButton'>
-                立即购买
-            </a>
-        );
-    }
+  render() {
+    const { productId } = this.props;
+    return (
+      <Link to={`/puchase/${productId}`} className="buyButton">
+        立即购买
+      </Link>
+    );
+  }
 }
 
 export default BuyButton;

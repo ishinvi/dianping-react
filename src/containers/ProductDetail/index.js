@@ -18,11 +18,17 @@ class ProductDetail extends Component {
     return (
       <div>
         <Header title="团购详情" onBack={this.handleBack} grey />
-        <ProductOverview />
-        <ShopInfo />
-        <Detail />
-        <Remark />
-        <BuyButton />
+        {product && <ProductOverview data={product} />}
+        {relatedShop && (
+          <ShopInfo data={relatedShop} totals={product.shopIds.length} />
+        )}
+        {product && (
+          <div>
+            <Detail data={product} />
+            <Remark data={product} />
+            <BuyButton productId={product.id} />
+          </div>
+        )}
       </div>
     );
   }
@@ -30,7 +36,7 @@ class ProductDetail extends Component {
   componentDidMount() {
     const { product } = this.props;
     if (!product) {
-      const productId = this.match.params.id;
+      const productId = this.props.match.params.id;
       this.props.detailActions.loadProductDetail(productId);
     } else if (!this.props.relatedShop) {
       this.props.detailActions.loadShopById(product.nearestShop);
@@ -45,7 +51,7 @@ class ProductDetail extends Component {
   }
 
   handleBack = () => {
-    this.props.history.goBack();//调用react-router的history对象
+    this.props.history.goBack(); //调用react-router的history对象
   };
 }
 
