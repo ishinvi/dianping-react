@@ -2,7 +2,11 @@ import { combineReducers } from "redux";
 import url from "../../utils/url";
 import { FETCH_DATA } from "../middleware/api";
 import { schema as shopSchema, getShopById } from "./entities/shops";
-import { schema as productSchema, getProductDetail } from "./entities/products";
+import {
+  schema as productSchema,
+  getProductDetail,
+  getProductById
+} from "./entities/products";
 export const types = {
   //获取产品详情
   FETCH_PRODUCT_DETAIL_REQUEST: "DETAIL/FETCH_PRODUCT_DETAIL_REQUEST",
@@ -115,3 +119,18 @@ const relatedShop = (state = initialState.relatedShop, action) => {
 const reducer = combineReducers({ product, relatedShop });
 
 export default reducer;
+
+//selectors
+//获取商品详情
+export const getProduct = (state, id) => {
+  return getProductDetail(state, id);
+};
+
+//获取管理的店铺信息
+export const getRelatedShop = (state, productId) => {
+  const product = getProductById(state, id);
+  let shopId = product ? product.nearestShop : null;
+  if (shopId) {
+    return getShopById(state, shopId);
+  }
+};
