@@ -22,7 +22,7 @@ class Detail extends Component {
             </tr>
             {products.map((item, index) => {
               return (
-                <tr className="detail__row">
+                <tr key={index} className="detail__row">
                   <td>{item.name}</td>
                   <td className="detail__td--alignRight">{item.quantity}</td>
                   <td className="detail__td--alignRight">{item.price}</td>

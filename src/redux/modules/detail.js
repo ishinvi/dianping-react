@@ -96,7 +96,7 @@ const product = (state = initialState.product, action) => {
       return { ...state, isFetching: true };
     case types.FETCH_PRODUCT_DETAIL_SUCCESS:
       return { ...state, id: action.id, isFetching: false };
-    case types.FETCH_PRODUCT_DETAIL_REQUEST:
+    case types.FETCH_PRODUCT_DETAIL_FAILURE:
       return { ...state, id: null, isFetching: false };
     default:
       return state;

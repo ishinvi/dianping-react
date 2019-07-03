@@ -37,7 +37,17 @@ const initialState = {
    * }
    */
   relatedKeywords: {},
-  historyKeywords: [] //保存关键词Id
+  historyKeywords: [], //保存关键词Id
+  /**
+   * relatedKeywords对象结构:
+   * {
+   *    '火锅':{
+   *        isFetching:false,
+   *        ids:[]
+   *    }
+   * }
+   */
+  searchedShopsByKeywords: {}
 };
 //第二步，编写actionCreators
 export const actions = {
@@ -152,7 +162,7 @@ const relatedKeywordsByText = (
         isFetching: false,
         ids: state.ids.concat(action.response.ids)
       };
-    case types.FETCH_RELATED_KEYWORDS_SUCCESS:
+    case types.FETCH_RELATED_KEYWORDS_FAILURE:
       return { ...state, isFetching: false };
     default:
       return state;

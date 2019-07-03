@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import LikeItem from "../LikeItem";
 import Loading from "../../../../components/Loading";
+import {Link} from "react-router-dom";
 import "./style.css";
 
 class LikeList extends Component {
@@ -23,20 +24,21 @@ class LikeList extends Component {
         {pageCount < 3 ? (
           <Loading />
         ) : (
-          <a href='#' className="likeList__viewAll">查看更多</a>
+          <Link to="#" className="likeList__viewAll">
+            查看更多
+          </Link>
         )}
       </div>
     );
   }
 
   componentDidMount() {
-    if(this.props.pageCount<3){
+    if (this.props.pageCount < 3) {
       document.addEventListener("scroll", this.handleScroll);
+    } else {
+      this.removeListener = true;
     }
-    else{
-      this.removeListener=true;
-    }
-    if(this.props.pageCount===0){
+    if (this.props.pageCount === 0) {
       this.props.fetchData();
     }
   }

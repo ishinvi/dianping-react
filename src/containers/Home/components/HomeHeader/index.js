@@ -6,9 +6,9 @@ class HomeHeader extends Component {
     return (
       <div className="homeHeader">
         <header className="homeHeader__wrapper">
-          <a href="#" className="homeHeader__city">
+          <Link to="#" className="homeHeader__city">
             北京
-          </a>
+          </Link>
           <Link to="/search" className="homeHeader__search">
             输入商户名、地点
           </Link>
