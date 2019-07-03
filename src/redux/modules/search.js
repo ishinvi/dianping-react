@@ -1,7 +1,7 @@
 import url from "../../utils/url";
 import { FETCH_DATA } from "../middleware/api";
 import { schema as keywordSchema, getKeywordById } from "./entities/keywords";
-import { schema as shopSchema } from "./entities/shops";
+import { schema as shopSchema, getShopById } from "./entities/shops";
 import { combineReducers } from "redux";
 
 //第一步定义actionTypes
@@ -207,7 +207,7 @@ const searchedShopsByKeyword = (
     case types.FETCH_SHOPS_FAILURE:
       return {
         ...state,
-        [action.text]: searchedShops(state[action.text], action)
+        [action.keyword]: searchedShops(state[action.keyword], action)
       };
     default:
       return state;
@@ -251,7 +251,7 @@ const historyKeywords = (state = initialState.historyKeywords, action) => {
         }
         return false;
       });
-      return [...data, action.text];
+      return [action.text,...data];
 
     case types.CLEAR_HISTORY_KEYWORDS:
       return [];
@@ -299,4 +299,23 @@ export const getHistoryKeywords = state => {
   return state.search.historyKeywords.map(id => {
     return getKeywordById(state, id);
   });
+};
+
+export const getSearchedShops = state => {
+  const keywordId = state.search.historyKeywords[0];
+  if (!keywordId) {
+    return [];
+  }
+  const shops = state.search.searchedShopsByKeyword[keywordId];
+  return shops.ids.map(id => {
+    return getShopById(state, id);
+  });
+};
+
+export const getCurrentKeyword = state => {
+  const keywordId = state.search.historyKeywords[0];
+  if (!keywordId) {
+    return "";
+  }
+  return getKeywordById(state, keywordId).keyword;
 };
