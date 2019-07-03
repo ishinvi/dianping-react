@@ -1,6 +1,6 @@
 import url from "../../utils/url";
 import { FETCH_DATA } from "../middleware/api";
-import { schema as keywordSchema } from "./entities/keywords";
+import { schema as keywordSchema, getKeywordById } from "./entities/keywords";
 import { combineReducers } from "redux";
 
 //第一步定义actionTypes
@@ -55,7 +55,7 @@ export const actions = {
   //根据输入获取相关关键词
   loadRelatedKeywords: text => {
     return (dispatch, getState) => {
-      const { relatedKeywords } = getState.search;
+      const { relatedKeywords } = getState().search;
       if (relatedKeywords[text]) {
         return null;
       }
@@ -64,18 +64,18 @@ export const actions = {
     };
   },
   setInputText: text => ({
-    types: types.SET_INPUT_TEXT,
+    type: types.SET_INPUT_TEXT,
     text
   }),
   clearInputText: () => ({
-    types: types.CLEAR_INPUT_TEXT
+    type: types.CLEAR_INPUT_TEXT
   }),
   addHistoryKeyword: keywordId => ({
-    types: types.ADD_HISTORY_KEYWORD,
+    type: types.ADD_HISTORY_KEYWORD,
     text: keywordId
   }),
   clearHistoryKeywords: () => ({
-    types: types.CLEAR_HISTORY_KEYWORDS
+    type: types.CLEAR_HISTORY_KEYWORDS
   })
 };
 
@@ -177,8 +177,10 @@ const historyKeywords = (state = initialState.historyKeywords, action) => {
         if (item !== action.text) {
           return true;
         }
-        return [...data, action.text];
+        return false;
       });
+      return [...data, action.text];
+
     case types.CLEAR_HISTORY_KEYWORDS:
       return [];
     default:
@@ -194,3 +196,34 @@ const reducer = combineReducers({
 });
 
 export default reducer;
+
+//第四步,selector
+export const getPopularKeywords = state => {
+  return state.search.popularKeywords.ids.map(id => {
+    return getKeywordById(state, id);
+  });
+};
+
+export const getRelatedKeywords = state => {
+  const text = state.search.inputText;
+  if (!text || text.trim().length === 0) {
+    return [];
+  }
+  const relatedKeywords = state.search.relatedKeywords[text];
+  if (!relatedKeywords) {
+    return [];
+  }
+  return relatedKeywords.ids.map(id => {
+    return getKeywordById(state, id);
+  });
+};
+
+export const getInputText = state => {
+  return state.search.inputText;
+};
+
+export const getHistoryKeywords = state => {
+  return state.search.historyKeywords.map(id => {
+    return getKeywordById(state, id);
+  });
+};
