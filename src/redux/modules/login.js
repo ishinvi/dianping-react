@@ -82,3 +82,10 @@ const reducer = (state = initialState, action) => {
 };
 
 export default reducer;
+
+//selectors
+export const getUsername = state => state.login.username;
+
+export const getPassword = state => state.login.password;
+
+export const isLogin = state => state.login.status;
