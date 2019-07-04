@@ -8,6 +8,7 @@ import Home from "../Home";
 import ProductDetail from "../ProductDetail";
 import Search from "../Search";
 import SearchResult from "../SearchResult";
+import Login from "../Login";
 class App extends Component {
   render() {
     const {
@@ -18,6 +19,7 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
+            <Route path="/login" component={Login} />
             <Route path="/detail/:id" component={ProductDetail} />
             <Route path="/search" component={Search} />
             <Route path="/search_result" component={SearchResult} />
