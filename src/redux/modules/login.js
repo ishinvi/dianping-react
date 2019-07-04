@@ -39,6 +39,7 @@ export const actions = {
   },
   logout: () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("login");
     return {
       type: types.LOGOUT
     };

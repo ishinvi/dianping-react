@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import './style.css'
 class UserHeader extends Component {
   render() {
     const { onBack, onLogout } = this.props;

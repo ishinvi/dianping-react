@@ -1,13 +1,13 @@
 import url from "../../utils/url";
 import { FETCH_DATA } from "../middleware/api";
 import {
-  schema as orderSchema,
-  USED_TYPE,
+  schema,
   TO_PAY_TYPE,
-  AVILABLE_TYPE,
-  REFUND_TYPE
+  AVAILABLE_TYPE,
+  REFUND_TYPE,
+  getOrderById
 } from "./entities/orders";
-import { combineReducers } from "../../../../../../Library/Caches/typescript/3.5/node_modules/redux";
+import { combineReducers } from "redux";
 const initialState = {
   orders: {
     isFetching: false,
@@ -39,8 +39,8 @@ export const actions = {
       if (ids.length > 0) {
         return null;
       }
-      const endPoint = url.getOrders();
-      dispatch(fetchOrders(endPoint));
+      const endpoint = url.getOrders();
+      dispatch(fetchOrders(endpoint));
     };
   },
   setCurrentTab: index => ({
@@ -49,21 +49,21 @@ export const actions = {
   })
 };
 
-fetchOrders = endPoint => ({
+const fetchOrders = endpoint => ({
   [FETCH_DATA]: {
     types: [
       types.FETCH_ORDERS_REQUEST,
       types.FETCH_ORDERS_SUCCESS,
       types.FETCH_ORDERS_FAILURE
     ],
-    endPoint,
-    orderSchema
+    endpoint,
+    schema
   }
 });
 
 //reducer
 const orders = (state = initialState.orders, action) => {
-  switch (action) {
+  switch (action.type) {
     case types.FETCH_ORDERS_REQUEST:
       return { ...state, isFetching: true };
     case types.FETCH_ORDERS_SUCCESS:
@@ -71,7 +71,7 @@ const orders = (state = initialState.orders, action) => {
         id => action.response.orders[id].type === TO_PAY_TYPE
       );
       const availableIds = action.response.ids.filter(
-        id => action.response.orders[id].type === AVILABLE_TYPE
+        id => action.response.orders[id].type === AVAILABLE_TYPE
       );
       const refundIds = action.response.ids.filter(
         id => action.response.orders[id].type === REFUND_TYPE
@@ -98,6 +98,18 @@ const currentTab = (state = initialState.currentTab, action) => {
   }
 };
 
-const reducer = combineReducers(orders, currentTab);
+const reducer = combineReducers({orders, currentTab});
 
 export default reducer;
+
+//selectors
+export const getCurrentTab = state => state.user.currentTab;
+
+export const getOrders = state => {
+  const key = ["ids", "toPayIds", "availableIds", "refundIds"][
+    state.user.currentTab
+  ];
+  return state.user.orders[key].map(id => {
+    return getOrderById(state,id);
+  });
+};
