@@ -18,7 +18,7 @@ export const types = {
 export const actions = {
   //删除订单
   deleteOrder: orderId => ({
-    types: types.DELETE_ORDER,
+    type: types.DELETE_ORDER,
     orderId
   })
 };
@@ -32,7 +32,7 @@ const reducer = (state = {}, action) => {
     return restOrders;
   }
   else{
-    return normalReducer;
+    return normalReducer(state, action);
   }
 };
 

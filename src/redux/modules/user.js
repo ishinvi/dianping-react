@@ -22,7 +22,7 @@ const initialState = {
   currentTab: 0,
   currentOrder: {
     id: null,
-    isDeleteing: false
+    isDeleting: false
   }
 };
 
@@ -36,9 +36,9 @@ export const types = {
   //设置当前选中tab
   SET_CURRENT_TAB: "USER/SET_CURRENT_TAB",
   //删除列表
-  DELETE_ORDERS_REQUEST: "USER/DELETE_ORDERS_REQUEST",
-  DELETE_ORDERS_SUCCESS: "USER/DELETE_ORDERS_SUCCESS",
-  DELETE_ORDERS_FAILURE: "USER/DELETE_ORDERS_FAILURE",
+  DELETE_ORDER_REQUEST: "USER/DELETE_ORDER_REQUEST",
+  DELETE_ORDER_SUCCESS: "USER/DELETE_ORDER_SUCCESS",
+  DELETE_ORDER_FAILURE: "USER/DELETE_ORDER_FAILURE",
   //删除确认圣诞框
   SHOW_DELETE_DIALOG: "USER/SHOW_DELETE_DIALOG",
   HIDE_DELETE_DIALOG: "USER/HIDE_DELETE_DIALOG"
@@ -54,7 +54,7 @@ export const actions = {
         return null;
       }
       const endpoint = url.getOrders();
-      dispatch(fetchOrders(endpoint));
+      return dispatch(fetchOrders(endpoint));
     };
   },
   //切换tab
@@ -67,7 +67,7 @@ export const actions = {
     return (dispatch, getState) => {
       const { id } = getState().user.currentOrder;
       if (id) {
-        dispatch(deleteOrderReuqest());
+        dispatch(deleteOrderRequest());
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             dispatch(deleteOrderSuccess(id));
@@ -89,12 +89,12 @@ export const actions = {
   })
 };
 
-const deleteOrderReuqest = () => ({
-  type: types.DELETE_ORDERS_REQUEST
+const deleteOrderRequest = () => ({
+  type: types.DELETE_ORDER_REQUEST
 });
 
 const deleteOrderSuccess = orderId => ({
-  type: types.DELETE_ORDERS_SUCCESS,
+  type: types.DELETE_ORDER_SUCCESS,
   orderId
 });
 
@@ -168,18 +168,18 @@ const currentOrder = (state = initialState.currentOrder, action) => {
       return {
         ...state,
         id: action.orderId,
-        isDeleteing: true
+        isDeleting: true
       };
     case types.HIDE_DELETE_DIALOG:
-    case types.DELETE_ORDERS_SUCCESS:
-    case types.DELETE_ORDERS_FAILURE:
+    case types.DELETE_ORDER_SUCCESS:
+    case types.DELETE_ORDER_FAILURE:
       return initialState.currentOrder;
     default:
       return state;
   }
 };
 
-const reducer = combineReducers({ orders, currentTab, currentOrder });
+const reducer = combineReducers({ currentTab,orders , currentOrder });
 
 export default reducer;
 
@@ -196,7 +196,7 @@ export const getOrders = state => {
 };
 
 export const getDeletingOrderId = state => {
-  return state.user.currentOrder && state.user.currentOrder.isDeleteing
+  return state.user.currentOrder && state.user.currentOrder.isDeleting
     ? state.user.currentOrder.id
     : null;
 };

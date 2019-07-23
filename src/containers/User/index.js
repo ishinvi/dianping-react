@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import UserMain from "./components/UserMain";
+import UserMain from "./containers/UserMain";
 import UserHeader from "./components/UserHeader";
 import {
   actions as userActions,
@@ -11,15 +11,11 @@ import { bindActionCreators } from "redux";
 import { actions as loginActions } from "../../redux/modules/login";
 class User extends Component {
   render() {
-    const { currentTab, orders } = this.props;
+    const { orders } = this.props;
     return (
       <div>
         <UserHeader onBack={this.handleBack} onLogout={this.handleLogout} />
-        <UserMain
-          currentTab={currentTab}
-          data={orders}
-          onSetCurrentTab={this.handleSetCurrentTab}
-        />
+        <UserMain data={orders} />
       </div>
     );
   }
