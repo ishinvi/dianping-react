@@ -9,6 +9,7 @@ import {
   types as orderTypes,
   actions as orderActions
 } from "./entities/orders";
+import { actions as commentActions } from "./entities/comments";
 import { combineReducers } from "redux";
 
 const initialState = {
@@ -22,7 +23,10 @@ const initialState = {
   currentTab: 0,
   currentOrder: {
     id: null,
-    isDeleting: false
+    isDeleting: false,
+    isCommenting: false,
+    comment: "",
+    stars: 0
   }
 };
 
@@ -41,7 +45,17 @@ export const types = {
   DELETE_ORDER_FAILURE: "USER/DELETE_ORDER_FAILURE",
   //删除确认圣诞框
   SHOW_DELETE_DIALOG: "USER/SHOW_DELETE_DIALOG",
-  HIDE_DELETE_DIALOG: "USER/HIDE_DELETE_DIALOG"
+  HIDE_DELETE_DIALOG: "USER/HIDE_DELETE_DIALOG",
+  //评价订单编辑
+  SHOW_COMMENT_AREA: "USER/SHOW_COMMENT_AREA",
+  HIDE_COMMENT_AREA: "USER/HIDE_COMMENT_AREA",
+  //编辑评价内容
+  SET_COMMENT: "USER/SET_COMMENT",
+  SET_STARS: "USER/SET_STARS",
+  //提交评价
+  POST_COMMENT_REQUEST: "USER/POST_COMMENT_REQUEST",
+  POST_COMMENT_SUCCESS: "USER/POST_COMMENT_SUCCESS",
+  POST_COMMENT_FAILURE: "USER/POST_COMMENT_FAILURE"
 };
 
 //actions
@@ -86,7 +100,45 @@ export const actions = {
   //隐藏删除对话框
   hideDeleteDialog: () => ({
     type: types.HIDE_DELETE_DIALOG
-  })
+  }),
+  //显示订单评价编辑框
+  showCommentArea: orderId => ({
+    type: types.SHOW_COMMENT_AREA,
+    orderId
+  }),
+  //隐藏订单评价编辑框
+  hideCommentArea: () => ({
+    type: types.HIDE_COMMENT_AREA
+  }),
+  setComment: comment => ({
+    type: types.SET_COMMENT,
+    comment
+  }),
+  setStars: stars => ({
+    type: types.SET_STARS,
+    stars
+  }),
+  submitComment: () => {
+    return (dispatch, getState) => {
+      dispatch(postCommentRequest());
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const {
+            currentOrder: { id, stars, comment }
+          } = getState().user;
+          const commentObj = {
+            id: +new Date(),
+            stars: stars,
+            content: comment
+          };
+          dispatch(postCommentSuccess());
+          dispatch(commentActions.addComment(commentObj));
+          dispatch(orderActions.addComment(id, commentObj.id));
+          resolve();
+        });
+      });
+    };
+  }
 };
 
 const deleteOrderRequest = () => ({
@@ -96,6 +148,14 @@ const deleteOrderRequest = () => ({
 const deleteOrderSuccess = orderId => ({
   type: types.DELETE_ORDER_SUCCESS,
   orderId
+});
+
+const postCommentRequest = () => ({
+  type: types.POST_COMMENT_REQUEST
+});
+
+const postCommentSuccess = () => ({
+  type: types.POST_COMMENT_SUCCESS
 });
 
 const fetchOrders = endpoint => ({
@@ -170,16 +230,29 @@ const currentOrder = (state = initialState.currentOrder, action) => {
         id: action.orderId,
         isDeleting: true
       };
+    case types.SHOW_COMMENT_AREA:
+      return {
+        ...state,
+        id: action.orderId,
+        isCommenting: true
+      };
     case types.HIDE_DELETE_DIALOG:
+    case types.HIDE_COMMENT_AREA:
     case types.DELETE_ORDER_SUCCESS:
     case types.DELETE_ORDER_FAILURE:
+    case types.POST_COMMENT_SUCCESS:
+    case types.POST_COMMENT_FAILURE:
       return initialState.currentOrder;
+    case types.SET_COMMENT:
+      return { ...state, comment: action.comment };
+    case types.SET_STARS:
+      return { ...state, stars: action.stars };
     default:
       return state;
   }
 };
 
-const reducer = combineReducers({ currentTab,orders , currentOrder });
+const reducer = combineReducers({ currentTab, orders, currentOrder });
 
 export default reducer;
 
