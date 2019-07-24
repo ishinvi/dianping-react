@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './style.css'
+import "./style.css";
 class OrderItem extends Component {
   render() {
     const {
@@ -13,7 +13,7 @@ class OrderItem extends Component {
         <div className="orderItem__main">
           <div className="orderItem__imgWrapper">
             <div className="orderItem__tag">{statusText}</div>
-            <img alt=''  className="orderItem__img" src={orderPicUrl}></img>
+            <img alt="" className="orderItem__img" src={orderPicUrl} />
           </div>
           <div className="orderItem__content">
             <div className="orderItem__line">{text[0]}</div>
@@ -24,17 +24,61 @@ class OrderItem extends Component {
           <div className="orderItem__type">{channel}</div>
           <div>
             {type === 1 ? <div className="orderItem__btn">评价</div> : null}
-            <div className="orderItem__btn" onClick={this.handleRemove}>删除</div>
+            <div className="orderItem__btn" onClick={this.handleRemove}>
+              删除
+            </div>
           </div>
         </div>
+        {this.renderEditArea()}
       </div>
     );
   }
 
-  //删除订单
-  handleRemove=()=>{
-    this.props.onRemove();
+  //渲染订单评价区域的DOM
+  renderEditArea() {
+    return (
+      <div className="orderItem__commentContainer">
+        <textarea
+          className="orderItem__comment"
+          onChange={this.handleCommentChange}
+          value={""}
+        />
+        {this.renderStars()}
+        <button className="orderItem__commentBtn" onClick={null}>
+          提交
+        </button>
+        <button className="orderItem__commentBtn" onClick={null}>
+          取消
+        </button>
+      </div>
+    );
   }
+
+  renderStars() {
+    return (
+      <div>
+        {[1, 2, 3, 4, 5].map((item, index) => {
+          const lightClass = item <= 3 ? "orderItem__star--light" : "";
+          return (
+            <span
+              className={"orderItem__star " + lightClass}
+              key={index}
+              onClick={null}
+            >
+              ★
+            </span>
+          );
+        })}
+      </div>
+    );
+  }
+
+  handleCommentChange = () => {};
+
+  //删除订单
+  handleRemove = () => {
+    this.props.onRemove();
+  };
 }
 
 export default OrderItem;
