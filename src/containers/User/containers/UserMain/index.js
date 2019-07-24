@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 import {
   actions as userActions,
   getCurrentTab,
-  getDeletingOrderId
+  getDeletingOrderId,
+  getCurrentOrderComment,
+  getCurrentOrderStars,
+  getCommentingOrderId
 } from "../../../../redux/modules/user";
 import OrderItem from "../../components/OrderItem";
 import Confirm from "../../../../components/Confirm";
@@ -47,12 +50,21 @@ class UserMain extends Component {
   }
 
   renderOrderList = data => {
+    const { commentingOrderId, orderComment, orderStars } = this.props;
     return data.map(item => {
       return (
         <OrderItem
           key={item.id}
           data={item}
+          isCommenting={item.id === commentingOrderId}
+          comment={item.id === commentingOrderId ? orderComment : ""}
+          stars={item.id === commentingOrderId ? orderStars : 0}
+          onCommentChange={this.handleCommentChange}
+          onStarsChange={this.handleStarsChange}
+          onComment={this.handleComment.bind(this, item.id)}
           onRemove={this.handleRemove.bind(this, item.id)}
+          onSubmitComment={this.handleSubmitComment}
+          onCancelComment={this.handleCancelComment}
         />
       );
     });
@@ -87,16 +99,57 @@ class UserMain extends Component {
     );
   };
 
+  handleCommentChange = comment => {
+    const {
+      userActions: { setComment }
+    } = this.props;
+    setComment(comment);
+  };
+
+  handleStarsChange = stars => {
+    const {
+      userActions: { setStars }
+    } = this.props;
+    setStars(stars);
+  };
+
+  //选中当前要评价的订单
+  handleComment = orderId => {
+    const {
+      userActions: { showCommentArea }
+    } = this.props;
+    showCommentArea(orderId);
+  };
+
   //删除订单
   handleRemove = orderId => {
     this.props.userActions.showDeleteDialog(orderId);
+  };
+
+  //提交评价
+  handleSubmitComment = () => {
+    const {
+      userActions: { submitComment }
+    } = this.props;
+    submitComment();
+  };
+
+  //取消评价
+  handleCancelComment = () => {
+    const {
+      userActions: { hideCommentArea }
+    } = this.props;
+    hideCommentArea();
   };
 }
 
 const mapStateToProps = (state, props) => {
   return {
     currentTab: getCurrentTab(state),
-    deletingOrderId: getDeletingOrderId(state)
+    deletingOrderId: getDeletingOrderId(state),
+    commentingOrderId: getCommentingOrderId(state),
+    orderComment: getCurrentOrderComment(state),
+    orderStars: getCurrentOrderStars(state)
   };
 };
 
