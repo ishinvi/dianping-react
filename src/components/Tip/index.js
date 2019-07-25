@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "./style.css";
 class Tip extends Component {
   render() {
@@ -8,9 +9,9 @@ class Tip extends Component {
         <div className="tip__alert">
           <div className="tip__content">{message}</div>
           <div className="tip__btns">
-            <a className="tip__btn" onClick={onClose}>
+            <Link to='#' className="tip__btn" onClick={onClose}>
               确定
-            </a>
+            </Link>
           </div>
         </div>
       </div>

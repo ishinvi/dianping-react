@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "./style.css";
 class PurchaseForm extends Component {
   render() {
@@ -55,9 +56,9 @@ class PurchaseForm extends Component {
             <span className="purchaseForm__desc">支持过期退</span>
           </li>
         </ul>
-        <a className="purchaseForm__submit" onClick={this.handleSubmit}>
+        <Link to='#' className="purchaseForm__submit" onClick={this.handleSubmit}>
           提交订单
-        </a>
+        </Link>
       </div>
     );
   }

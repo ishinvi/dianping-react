@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import './style.css'
 
 class Confirm extends Component {
@@ -15,12 +16,12 @@ class Confirm extends Component {
         <div className="confirm__alert">
           <div className="confirm__content">{content}</div>
           <div className="confirm__btns">
-            <a href='#' className="confirm__btn" onClick={onCancel}>
+            <Link to='#' className="confirm__btn" onClick={onCancel}>
               {cancelText}
-            </a>
-            <a className="confirm__btn" onClick={onConfirm}>
+            </Link>
+            <Link to='#' className="confirm__btn" onClick={onConfirm}>
               {confirmText}
-            </a>
+            </Link>
           </div>
         </div>
       </div>
