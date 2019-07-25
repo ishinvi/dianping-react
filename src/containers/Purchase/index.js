@@ -35,7 +35,15 @@ class Purchase extends Component {
   }
 
   componentDidMount() {
-    return;
+    const { product } = this.props;
+    if (!product) {
+      const productId = this.props.match.params.id;
+      this.props.detailActions.loadProductDetail(productId);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.purchaseActions.setOrderQuantity(1);
   }
 
   handleBack = () => {
