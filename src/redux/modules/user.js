@@ -7,10 +7,12 @@ import {
   REFUND_TYPE,
   getOrderById,
   types as orderTypes,
-  actions as orderActions
+  actions as orderActions,
+  getAllOrders
 } from "./entities/orders";
 import { actions as commentActions } from "./entities/comments";
 import { combineReducers } from "redux";
+import { createSelector } from "reselect";
 
 const typeToKey = {
   [TO_PAY_TYPE]: "toPayIds",
@@ -279,15 +281,27 @@ export default reducer;
 
 //selectors
 export const getCurrentTab = state => state.user.currentTab;
+const getUserOders = state => state.user.orders;
+// export const getOrders = state => {
+//   const key = ["ids", "toPayIds", "availableIds", "refundIds"][
+//     state.user.currentTab
+//   ];
+//   return state.user.orders[key].map(id => {
+//     return getOrderById(state, id);
+//   });
+// };
 
-export const getOrders = state => {
-  const key = ["ids", "toPayIds", "availableIds", "refundIds"][
-    state.user.currentTab
-  ];
-  return state.user.orders[key].map(id => {
-    return getOrderById(state, id);
-  });
-};
+//reselect 重构
+export const getOrders = createSelector(
+  [getCurrentTab, getUserOders, getAllOrders],
+  (tabIndex, userOrders, orders) => {
+    const key = ["ids", "toPayIds", "availableIds", "refundIds"][tabIndex];
+    const orderIds = userOrders[key];
+    return orderIds.map(id => {
+      return orders[id];
+    });
+  }
+);
 
 // 获取正在删除的订单id
 export const getDeletingOrderId = state => {
